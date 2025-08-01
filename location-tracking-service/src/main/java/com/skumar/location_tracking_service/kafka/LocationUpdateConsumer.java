@@ -22,6 +22,14 @@ public class LocationUpdateConsumer {
         this.webSocketPublisher = webSocketPublisher;
     }
 
+    public LocationUpdateService getLocationUpdateService() {
+        return locationUpdateService;
+    }
+
+    public LocationWebSocketPublisher getWebSocketPublisher() {
+        return webSocketPublisher;
+    }
+
     @KafkaListener(topics = "driver-location-updates", groupId = "location-tracking-group")
     public void consume(ConsumerRecord<String, String> record) {
         try {

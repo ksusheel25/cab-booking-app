@@ -19,6 +19,14 @@ public class NotificationEventProducer {
         this.topic = topic;
     }
 
+    public KafkaTemplate<String, NotificationEventDTO> getKafkaTemplate() {
+        return kafkaTemplate;
+    }
+
+    public String getTopic() {
+        return topic;
+    }
+
     public void sendNotification(NotificationEventDTO event) {
         logger.info("Producing notification event to Kafka: {}", event);
         kafkaTemplate.send(topic, event);

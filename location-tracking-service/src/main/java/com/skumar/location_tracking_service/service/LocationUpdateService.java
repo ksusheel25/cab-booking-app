@@ -24,6 +24,14 @@ public class LocationUpdateService {
         this.notificationEventProducer = notificationEventProducer;
     }
 
+    public LocationUpdateRepository getRepository() {
+        return repository;
+    }
+
+    public NotificationEventProducer getNotificationEventProducer() {
+        return notificationEventProducer;
+    }
+
     public void saveLocation(LocationUpdateDTO dto) {
         logger.info("Saving location update for driverId={}, city={}, status={}", dto.getDriverId(), dto.getCity(), dto.getStatus());
         LocationUpdate entity = new LocationUpdate();

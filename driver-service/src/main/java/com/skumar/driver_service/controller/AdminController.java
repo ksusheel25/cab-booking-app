@@ -100,9 +100,9 @@ public class AdminController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/audit-logs")
-    @Operation(summary = "Get audit logs with pagination")
-    public ResponseEntity<Page<AuditLog>> getAuditLogs(@RequestParam(defaultValue = "0") int page,
+    @GetMapping("/audit-logs-summary")
+    @Operation(summary = "Get audit logs summary (paginated)")
+    public ResponseEntity<Page<AuditLog>> getAuditLogsSummary(@RequestParam(defaultValue = "0") int page,
                                                       @RequestParam(defaultValue = "20") int size) {
         return ResponseEntity.ok(auditLogRepository.findAll(PageRequest.of(page, size)));
     }

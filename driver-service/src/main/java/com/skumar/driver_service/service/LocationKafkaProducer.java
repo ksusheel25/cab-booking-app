@@ -16,6 +16,14 @@ public class LocationKafkaProducer {
         this.topic = topic;
     }
 
+    public KafkaTemplate<String, LocationUpdateDTO> getKafkaTemplate() {
+        return kafkaTemplate;
+    }
+
+    public String getTopic() {
+        return topic;
+    }
+
     public void sendLocationUpdate(LocationUpdateDTO locationUpdate) {
         kafkaTemplate.send(topic, locationUpdate);
     }

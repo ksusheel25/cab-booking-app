@@ -19,6 +19,10 @@ public class NotificationEventConsumer {
         this.notificationService = notificationService;
     }
 
+    public NotificationService getNotificationService() {
+        return notificationService;
+    }
+
     @KafkaListener(topics = "notification-events", groupId = "notification-service-group")
     public void consume(ConsumerRecord<String, String> record) {
         logger.info("Consuming notification event from Kafka: {}", record.value());

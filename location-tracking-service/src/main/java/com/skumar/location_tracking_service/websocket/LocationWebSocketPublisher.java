@@ -12,6 +12,10 @@ public class LocationWebSocketPublisher {
         this.messagingTemplate = messagingTemplate;
     }
 
+    public SimpMessagingTemplate getMessagingTemplate() {
+        return messagingTemplate;
+    }
+
     public void broadcastLocation(LocationUpdateDTO locationUpdateDTO) {
         messagingTemplate.convertAndSend("/topic/location-updates", locationUpdateDTO);
     }

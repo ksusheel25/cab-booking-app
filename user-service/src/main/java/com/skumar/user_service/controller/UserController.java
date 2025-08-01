@@ -38,6 +38,22 @@ public class UserController {
         this.auditLogService = auditLogService;
     }
 
+    public UserService getUserService() {
+        return userService;
+    }
+
+    public JwtService getJwtService() {
+        return jwtService;
+    }
+
+    public PasswordEncoder getPasswordEncoder() {
+        return passwordEncoder;
+    }
+
+    public AuditLogService getAuditLogService() {
+        return auditLogService;
+    }
+
     // Public endpoints
     @PostMapping("/register")
     public ResponseEntity<UserResponse> registerUser(@Valid @RequestBody UserDto userDto) {

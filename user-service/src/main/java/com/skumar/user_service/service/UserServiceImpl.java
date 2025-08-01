@@ -9,7 +9,6 @@ import com.skumar.user_service.exception.UserNotFoundException;
 import com.skumar.user_service.exception.UserServiceException;
 import com.skumar.user_service.repository.UserRepository;
 import com.skumar.user_service.repository.VerificationTokenRepository;
-import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -40,6 +39,26 @@ public class UserServiceImpl implements UserService {
         this.modelMapper = modelMapper;
         this.passwordEncoder = passwordEncoder;
         this.emailService = emailService;
+    }
+
+    public UserRepository getUserRepository() {
+        return userRepository;
+    }
+
+    public VerificationTokenRepository getTokenRepository() {
+        return tokenRepository;
+    }
+
+    public ModelMapper getModelMapper() {
+        return modelMapper;
+    }
+
+    public PasswordEncoder getPasswordEncoder() {
+        return passwordEncoder;
+    }
+
+    public EmailService getEmailService() {
+        return emailService;
     }
 
     @Override

@@ -1,0 +1,58 @@
+{
+  "info": {
+    "_postman_id": "cab-booking-app-collection-2025-08-01",
+    "name": "Cab Booking App API Collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "All main endpoints for User, Driver, and Location Tracking services."
+  },
+  "item": [
+    {
+      "name": "User-Service",
+      "item": [
+        { "name": "Register User", "request": { "method": "POST", "header": [], "url": { "raw": "{{user-service}}/api/users/register", "host": ["{{user-service}}"], "path": ["api","users","register"] }, "body": { "mode": "raw", "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\"\n}" } } },
+        { "name": "Login", "request": { "method": "POST", "header": [], "url": { "raw": "{{user-service}}/api/users/login", "host": ["{{user-service}}"], "path": ["api","users","login"] }, "body": { "mode": "raw", "raw": "{\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\"\n}" } } },
+        { "name": "Get User Profile", "request": { "method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{jwt}}"}], "url": { "raw": "{{user-service}}/api/users/profile", "host": ["{{user-service}}"], "path": ["api","users","profile"] } } },
+        { "name": "Update Profile", "request": { "method": "PUT", "header": [{"key": "Authorization", "value": "Bearer {{jwt}}"}], "url": { "raw": "{{user-service}}/api/users/profile", "host": ["{{user-service}}"], "path": ["api","users","profile"] }, "body": { "mode": "raw", "raw": "{\n  \"name\": \"John Updated\"\n}" } } },
+        { "name": "Change Password", "request": { "method": "PUT", "header": [{"key": "Authorization", "value": "Bearer {{jwt}}"}], "url": { "raw": "{{user-service}}/api/users/change-password", "host": ["{{user-service}}"], "path": ["api","users","change-password"] }, "body": { "mode": "raw", "raw": "{\n  \"oldPassword\": \"password123\",\n  \"newPassword\": \"newpass456\",\n  \"confirmPassword\": \"newpass456\"\n}" } } },
+        { "name": "List All Users", "request": { "method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{admin_jwt}}"}], "url": { "raw": "{{user-service}}/api/users", "host": ["{{user-service}}"], "path": ["api","users"] } } },
+        { "name": "Search Users", "request": { "method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{admin_jwt}}"}], "url": { "raw": "{{user-service}}/api/users/search?keyword=John", "host": ["{{user-service}}"], "path": ["api","users","search"], "query": [{"key": "keyword", "value": "John"}] } } },
+        { "name": "Update User Roles", "request": { "method": "PUT", "header": [{"key": "Authorization", "value": "Bearer {{admin_jwt}}"}], "url": { "raw": "{{user-service}}/api/users/john@example.com/roles", "host": ["{{user-service}}"], "path": ["api","users","john@example.com","roles"] }, "body": { "mode": "raw", "raw": "[\"USER\",\"ADMIN\"]" } } },
+        { "name": "Enable/Disable User", "request": { "method": "PUT", "header": [{"key": "Authorization", "value": "Bearer {{admin_jwt}}"}], "url": { "raw": "{{user-service}}/api/users/john@example.com/toggle-status?enabled=true", "host": ["{{user-service}}"], "path": ["api","users","john@example.com","toggle-status"], "query": [{"key": "enabled", "value": "true"}] } } },
+        { "name": "Lock/Unlock User", "request": { "method": "PUT", "header": [{"key": "Authorization", "value": "Bearer {{admin_jwt}}"}], "url": { "raw": "{{user-service}}/api/users/john@example.com/toggle-lock?locked=false", "host": ["{{user-service}}"], "path": ["api","users","john@example.com","toggle-lock"], "query": [{"key": "locked", "value": "false"}] } } },
+        { "name": "Delete User", "request": { "method": "DELETE", "header": [{"key": "Authorization", "value": "Bearer {{admin_jwt}}"}], "url": { "raw": "{{user-service}}/api/users/john@example.com", "host": ["{{user-service}}"], "path": ["api","users","john@example.com"] } } },
+        { "name": "Get Audit Logs", "request": { "method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{admin_jwt}}"}], "url": { "raw": "{{user-service}}/api/users/audit-logs?page=0&size=20", "host": ["{{user-service}}"], "path": ["api","users","audit-logs"], "query": [{"key": "page", "value": "0"}, {"key": "size", "value": "20"}] } } }
+      ]
+    },
+    {
+      "name": "Driver-Service (Admin)",
+      "item": [
+        { "name": "List Drivers", "request": { "method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{admin_jwt}}"}], "url": { "raw": "{{driver-service}}/api/v1/admin/drivers", "host": ["{{driver-service}}"], "path": ["api","v1","admin","drivers"] } } },
+        { "name": "Search Drivers", "request": { "method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{admin_jwt}}"}], "url": { "raw": "{{driver-service}}/api/v1/admin/drivers/search?query=John", "host": ["{{driver-service}}"], "path": ["api","v1","admin","drivers","search"], "query": [{"key": "query", "value": "John"}] } } },
+        { "name": "Get Driver By ID", "request": { "method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{admin_jwt}}"}], "url": { "raw": "{{driver-service}}/api/v1/admin/drivers/1", "host": ["{{driver-service}}"], "path": ["api","v1","admin","drivers","1"] } } },
+        { "name": "Update Driver Status", "request": { "method": "PATCH", "header": [{"key": "Authorization", "value": "Bearer {{admin_jwt}}"}], "url": { "raw": "{{driver-service}}/api/v1/admin/drivers/1/status?status=AVAILABLE", "host": ["{{driver-service}}"], "path": ["api","v1","admin","drivers","1","status"], "query": [{"key": "status", "value": "AVAILABLE"}] } } },
+        { "name": "Update Driver Role", "request": { "method": "PATCH", "header": [{"key": "Authorization", "value": "Bearer {{admin_jwt}}"}], "url": { "raw": "{{driver-service}}/api/v1/admin/drivers/1/role?role=ADMIN", "host": ["{{driver-service}}"], "path": ["api","v1","admin","drivers","1","role"], "query": [{"key": "role", "value": "ADMIN"}] } } },
+        { "name": "Driver Statistics", "request": { "method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{admin_jwt}}"}], "url": { "raw": "{{driver-service}}/api/v1/admin/drivers/statistics", "host": ["{{driver-service}}"], "path": ["api","v1","admin","drivers","statistics"] } } },
+        { "name": "Get Driver Documents", "request": { "method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{admin_jwt}}"}], "url": { "raw": "{{driver-service}}/api/v1/admin/drivers/1/documents", "host": ["{{driver-service}}"], "path": ["api","v1","admin","drivers","1","documents"] } } },
+        { "name": "Verify Document", "request": { "method": "POST", "header": [{"key": "Authorization", "value": "Bearer {{admin_jwt}}"}], "url": { "raw": "{{driver-service}}/api/v1/admin/drivers/documents/1/verify", "host": ["{{driver-service}}"], "path": ["api","v1","admin","drivers","documents","1","verify"] } } },
+        { "name": "List Available Drivers", "request": { "method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{admin_jwt}}"}], "url": { "raw": "{{driver-service}}/api/v1/admin/drivers/available", "host": ["{{driver-service}}"], "path": ["api","v1","admin","drivers","available"] } } },
+        { "name": "Delete Driver", "request": { "method": "DELETE", "header": [{"key": "Authorization", "value": "Bearer {{admin_jwt}}"}], "url": { "raw": "{{driver-service}}/api/v1/admin/drivers/1", "host": ["{{driver-service}}"], "path": ["api","v1","admin","drivers","1"] } } },
+        { "name": "Get Audit Logs", "request": { "method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{admin_jwt}}"}], "url": { "raw": "{{driver-service}}/api/v1/admin/audit-logs?page=0&size=20", "host": ["{{driver-service}}"], "path": ["api","v1","admin","audit-logs"], "query": [{"key": "page", "value": "0"}, {"key": "size", "value": "20"}] } } }
+      ]
+    },
+    {
+      "name": "Location-Tracking-Service",
+      "item": [
+        { "name": "Recent Locations for Driver", "request": { "method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{jwt}}"}], "url": { "raw": "{{location-tracking-service}}/api/driver/1/locations?limit=10", "host": ["{{location-tracking-service}}"], "path": ["api","driver","1","locations"], "query": [{"key": "limit", "value": "10"}] } } },
+        { "name": "Latest Locations for All Drivers", "request": { "method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{jwt}}"}], "url": { "raw": "{{location-tracking-service}}/api/drivers/locations", "host": ["{{location-tracking-service}}"], "path": ["api","drivers","locations"] } } },
+        { "name": "Latest Locations by City/Status", "request": { "method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{jwt}}"}], "url": { "raw": "{{location-tracking-service}}/api/drivers/locations/filter?city=Delhi&status=AVAILABLE", "host": ["{{location-tracking-service}}"], "path": ["api","drivers","locations","filter"], "query": [{"key": "city", "value": "Delhi"}, {"key": "status", "value": "AVAILABLE"}] } } }
+      ]
+    }
+  ],
+  "variable": [
+    { "key": "user-service", "value": "http://localhost:8081" },
+    { "key": "driver-service", "value": "http://localhost:8082" },
+    { "key": "location-tracking-service", "value": "http://localhost:8083" },
+    { "key": "jwt", "value": "" },
+    { "key": "admin_jwt", "value": "" }
+  ]
+}

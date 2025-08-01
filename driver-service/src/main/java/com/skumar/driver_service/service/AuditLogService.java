@@ -14,6 +14,10 @@ public class AuditLogService {
         this.repository = repository;
     }
 
+    public AuditLogRepository getRepository() {
+        return repository;
+    }
+
     public void log(String username, String action, String endpoint, String method, String details) {
         AuditLog log = new AuditLog();
         log.setUsername(username);

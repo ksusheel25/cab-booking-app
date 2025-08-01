@@ -8,7 +8,6 @@ import com.skumar.driver_service.entity.Role;
 import com.skumar.driver_service.exception.ApiException;
 import com.skumar.driver_service.repository.DriverRepository;
 import com.skumar.driver_service.service.DriverService;
-import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -34,6 +33,18 @@ public class DriverServiceImpl implements DriverService {
         this.driverRepository = driverRepository;
         this.modelMapper = modelMapper;
         this.passwordEncoder = passwordEncoder;
+    }
+
+    public DriverRepository getDriverRepository() {
+        return driverRepository;
+    }
+
+    public ModelMapper getModelMapper() {
+        return modelMapper;
+    }
+
+    public PasswordEncoder getPasswordEncoder() {
+        return passwordEncoder;
     }
 
     @Override

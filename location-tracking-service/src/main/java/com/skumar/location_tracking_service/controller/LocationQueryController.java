@@ -20,6 +20,10 @@ public class LocationQueryController {
         this.locationUpdateService = locationUpdateService;
     }
 
+    public LocationUpdateService getLocationUpdateService() {
+        return locationUpdateService;
+    }
+
     @GetMapping("/api/driver/{driverId}/locations")
     public List<LocationUpdateDTO> getRecentLocations(
             @PathVariable Long driverId,

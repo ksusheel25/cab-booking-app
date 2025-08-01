@@ -9,7 +9,6 @@ import com.skumar.driver_service.exception.DocumentException;
 import com.skumar.driver_service.repository.DocumentRepository;
 import com.skumar.driver_service.repository.DriverRepository;
 import com.skumar.driver_service.service.DocumentService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,7 +24,6 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
 @Transactional
 public class DocumentServiceImpl implements DocumentService {
 
@@ -33,12 +31,22 @@ public class DocumentServiceImpl implements DocumentService {
     private final DriverRepository driverRepository;
     private final StorageConfig storageConfig;
 
-    public DocumentServiceImpl(DocumentRepository documentRepository,
-                                  DriverRepository driverRepository,
-                                  StorageConfig storageConfig) {
+    public DocumentServiceImpl(DocumentRepository documentRepository, DriverRepository driverRepository, StorageConfig storageConfig) {
         this.documentRepository = documentRepository;
         this.driverRepository = driverRepository;
         this.storageConfig = storageConfig;
+    }
+
+    public DocumentRepository getDocumentRepository() {
+        return documentRepository;
+    }
+
+    public DriverRepository getDriverRepository() {
+        return driverRepository;
+    }
+
+    public StorageConfig getStorageConfig() {
+        return storageConfig;
     }
 
     private static final List<String> ALLOWED_FILE_TYPES = Arrays.asList(
@@ -57,14 +65,12 @@ public class DocumentServiceImpl implements DocumentService {
 
         validateFile(file);
 
-        // Check if document already exists
         documentRepository.findByDriverIdAndDocType(driverId, docType)
                 .ifPresent(doc -> {
                     throw new DocumentException("Document already exists for this type", HttpStatus.BAD_REQUEST);
                 });
 
         try {
-            // Create uploads directory if it doesn't exist
             Path uploadPath = storageConfig.getUploadPath();
             Files.createDirectories(uploadPath);
 
