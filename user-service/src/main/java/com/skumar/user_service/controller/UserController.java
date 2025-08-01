@@ -5,8 +5,12 @@ import com.skumar.user_service.entity.Role;
 import com.skumar.user_service.exception.UserServiceException;
 import com.skumar.user_service.service.JwtService;
 import com.skumar.user_service.service.UserService;
+import com.skumar.user_service.service.AuditLogService;
+import com.skumar.user_service.entity.AuditLog;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,12 +28,14 @@ public class UserController {
     private final UserService userService;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
+    private final AuditLogService auditLogService;
 
     @Autowired
-    public UserController(UserService userService, JwtService jwtService, PasswordEncoder passwordEncoder) {
+    public UserController(UserService userService, JwtService jwtService, PasswordEncoder passwordEncoder, AuditLogService auditLogService) {
         this.userService = userService;
         this.jwtService = jwtService;
         this.passwordEncoder = passwordEncoder;
+        this.auditLogService = auditLogService;
     }
 
     // Public endpoints
@@ -232,6 +238,13 @@ public class UserController {
     public ResponseEntity<Void> deleteUser(@PathVariable String email) {
         userService.deleteUser(email);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/audit-logs")
+    @PreAuthorize("hasAuthority('ADMIN_READ')")
+    public ResponseEntity<Page<AuditLog>> getAuditLogs(@RequestParam(defaultValue = "0") int page,
+                                                      @RequestParam(defaultValue = "20") int size) {
+        return ResponseEntity.ok(auditLogService.getAuditLogs(PageRequest.of(page, size)));
     }
 
     private UserResponse mapToUserResponse(UserDto userDto) {

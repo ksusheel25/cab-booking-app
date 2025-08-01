@@ -1,15 +1,18 @@
 package com.skumar.driver_service.controller;
 
 import com.skumar.driver_service.dto.DriverDTO;
+import com.skumar.driver_service.entity.AuditLog;
 import com.skumar.driver_service.entity.DocumentType;
 import com.skumar.driver_service.entity.DriverStatus;
 import com.skumar.driver_service.service.DocumentService;
 import com.skumar.driver_service.service.DriverService;
+import com.skumar.driver_service.repository.AuditLogRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,10 +27,12 @@ public class AdminController {
 
     private final DriverService driverService;
     private final DocumentService documentService;
+    private final AuditLogRepository auditLogRepository;
 
-    public AdminController(DriverService driverService, DocumentService documentService) {
+    public AdminController(DriverService driverService, DocumentService documentService, AuditLogRepository auditLogRepository) {
         this.driverService = driverService;
         this.documentService = documentService;
+        this.auditLogRepository = auditLogRepository;
     }
 
     @GetMapping("/drivers")
@@ -93,5 +98,12 @@ public class AdminController {
     public ResponseEntity<?> deleteDriver(@PathVariable Long id) {
         driverService.deleteDriver(id);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/audit-logs")
+    @Operation(summary = "Get audit logs with pagination")
+    public ResponseEntity<Page<AuditLog>> getAuditLogs(@RequestParam(defaultValue = "0") int page,
+                                                      @RequestParam(defaultValue = "20") int size) {
+        return ResponseEntity.ok(auditLogRepository.findAll(PageRequest.of(page, size)));
     }
 }

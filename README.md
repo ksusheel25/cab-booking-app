@@ -219,18 +219,89 @@ A production-ready, scalable, and secure cab booking system built with Spring Bo
 
 ---
 
-## 🚀 Getting Started
+## 🚦 Audit Logging & Traceability
 
-### Prerequisites
-- Java 21+
-- Docker & Docker Compose
-- Maven
+All critical admin and user actions are audit-logged for compliance and traceability:
+- **User-Service**: All admin/user actions (PUT, POST, DELETE to `/api/users/**`) are logged to the `audit_logs` table. Paginated endpoint for review:
+  - `GET /api/users/audit-logs?page=0&size=20` (ADMIN_READ required)
+- **Driver-Service**: All admin actions (via HandlerInterceptor) are logged to the `audit_logs` table. Paginated endpoint for review:
+  - `GET /api/v1/admin/audit-logs?page=0&size=20` (ADMIN role required)
+- **Logging**: All key service methods use SLF4J logging for observability and debugging.
 
-### Running with Docker Compose
+---
 
-```sh
+## 📡 Real-Time Location Tracking & Notifications
+
+- **Location-Tracking-Service**:
+  - Consumes driver location updates from Kafka.
+  - Persists locations in MySQL.
+  - Provides REST APIs for querying locations:
+    - `GET /api/driver/{driverId}/locations?limit=10` – Recent locations for a driver
+    - `GET /api/drivers/locations` – Latest location for all drivers
+    - `GET /api/drivers/locations/filter?city=...&status=...` – Filtered by city/status
+  - Broadcasts live locations via WebSocket.
+  - Sends notification events to Kafka when driver status is AVAILABLE.
+
+- **Notification-Service**:
+  - Consumes notification events from Kafka.
+  - Logs notification processing (stub for email/SMS/push).
+
+---
+
+## 🔗 Key REST Endpoints
+
+### User-Service
+- `POST /api/users/register` – Register user
+- `POST /api/users/login` – Login
+- `GET /api/users/profile` – Get user profile
+- `PUT /api/users/profile` – Update profile
+- `PUT /api/users/change-password` – Change password
+- `GET /api/users` – List all users (ADMIN_READ)
+- `GET /api/users/search?keyword=...` – Search users (ADMIN_READ)
+- `PUT /api/users/{email}/roles` – Update user roles (ADMIN_UPDATE)
+- `PUT /api/users/{email}/toggle-status` – Enable/disable user (ADMIN_UPDATE)
+- `PUT /api/users/{email}/toggle-lock` – Lock/unlock user (ADMIN_UPDATE)
+- `DELETE /api/users/{email}` – Delete user (ADMIN_DELETE)
+- `GET /api/users/audit-logs` – Paginated audit logs (ADMIN_READ)
+
+### Driver-Service (Admin)
+- `GET /api/v1/admin/drivers` – List drivers (paginated)
+- `GET /api/v1/admin/drivers/search?query=...` – Search drivers
+- `GET /api/v1/admin/drivers/{id}` – Get driver by ID
+- `PATCH /api/v1/admin/drivers/{id}/status` – Update driver status
+- `PATCH /api/v1/admin/drivers/{id}/role` – Update driver role
+- `GET /api/v1/admin/drivers/statistics` – Driver statistics
+- `GET /api/v1/admin/drivers/{driverId}/documents` – Get driver documents
+- `POST /api/v1/admin/drivers/documents/{documentId}/verify` – Verify document
+- `GET /api/v1/admin/drivers/available` – List available drivers
+- `DELETE /api/v1/admin/drivers/{id}` – Delete driver
+- `GET /api/v1/admin/audit-logs` – Paginated audit logs
+
+### Location-Tracking-Service
+- `GET /api/driver/{driverId}/locations?limit=10` – Recent locations for a driver
+- `GET /api/drivers/locations` – Latest location for all drivers
+- `GET /api/drivers/locations/filter?city=...&status=...` – Filtered by city/status
+
+---
+
+## ⚡ Event-Driven & Real-Time Features
+- **Kafka**: Used for driver location updates and notification events.
+- **WebSocket**: Real-time location broadcasting to clients.
+- **Notification-Service**: Consumes events and logs (stub for future email/SMS/push integration).
+
+---
+
+## 📝 Usage Notes
+- All endpoints are protected by JWT and role-based access control.
+- Audit logs are available for admin review in both user-service and driver-service.
+- Real-time and event-driven features are enabled by default in Docker Compose.
+
+---
+
+## 🛠️ How to Run (Quick Start)
+
+```powershell
 # From the project root
-# Build and start all services
 ./mvnw clean package -DskipTests
 # Then run:
 docker-compose up --build
@@ -238,40 +309,16 @@ docker-compose up --build
 
 - User Service: http://localhost:8081/swagger-ui.html
 - Driver Service: http://localhost:8082/swagger-ui.html
+- Location Tracking Service: [port as configured]
+- Notification Service: [port as configured]
 - MySQL: localhost:3306 (user: root, pass: rootpass)
 
-### Running Locally (without Docker)
-- Start MySQL locally with a database named `cabdb`.
-- Run Eureka Server, then User and Driver services via Maven:
-  ```sh
-  cd eureka-server && ./mvnw spring-boot:run
-  cd ../user-service && ./mvnw spring-boot:run
-  cd ../driver-service && ./mvnw spring-boot:run
-  ```
-
 ---
 
-## 📄 API Documentation
-Swagger UI:
-
-- User Service: http://localhost:8081/swagger-ui.html
-- Driver Service: http://localhost:8082/swagger-ui.html
-
----
-
-## 🔗 Postman Collections
-✅ Postman collections for:
-
-- user-service APIs (register, login, manage)
-- driver-service APIs (register, upload docs, admin features)
-
----
-
-## 🤝 Contributing
-1. Fork the repo and create your branch from `main`.
-2. Ensure code follows existing style and conventions.
-3. Add tests for new features.
-4. Submit a pull request with a clear description.
+## 📈 Extensibility
+- Add more granular audit log details (e.g., request bodies, action types) as needed.
+- Implement real notification channels (email, SMS, push) in notification-service.
+- Add advanced analytics, geospatial queries, or further admin/user endpoints as needed.
 
 ---
 

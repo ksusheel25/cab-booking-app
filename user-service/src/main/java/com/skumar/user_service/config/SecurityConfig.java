@@ -16,19 +16,23 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-public class SecurityConfig {
+public class SecurityConfig implements WebMvcConfigurer {
 
     private final UserService userService;
     private final JwtService jwtService;
+    private final AuditLogInterceptor auditLogInterceptor;
 
     @Autowired
-    public SecurityConfig(UserService userService, JwtService jwtService) {
+    public SecurityConfig(UserService userService, JwtService jwtService, AuditLogInterceptor auditLogInterceptor) {
         this.userService = userService;
         this.jwtService = jwtService;
+        this.auditLogInterceptor = auditLogInterceptor;
     }
 
     @Bean
@@ -64,5 +68,10 @@ public class SecurityConfig {
                         .title("User Service API")
                         .version("1.0.0")
                         .description("Documentation for User Service APIs"));
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(auditLogInterceptor).addPathPatterns("/api/users/**");
     }
 }

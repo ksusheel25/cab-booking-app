@@ -13,15 +13,21 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import com.skumar.driver_service.config.AuditLogInterceptor;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-public class SecurityConfig {
+public class SecurityConfig implements WebMvcConfigurer {
 
     private final JwtAuthenticationFilter jwtAuthFilter;
-    public SecurityConfig(JwtAuthenticationFilter jwtAuthFilter) {
+    private final AuditLogInterceptor auditLogInterceptor;
+
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthFilter, AuditLogInterceptor auditLogInterceptor) {
         this.jwtAuthFilter = jwtAuthFilter;
+        this.auditLogInterceptor = auditLogInterceptor;
     }
 
     @Bean
@@ -45,5 +51,10 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(auditLogInterceptor).addPathPatterns("/api/v1/admin/**");
     }
 }
